@@ -1,2 +1,2 @@
-# chepchepcirkus.github.io
-Demo of loonyball game
+# Loonyball
+Little javascript game using babylonjs library
