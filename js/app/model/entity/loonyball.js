@@ -6,7 +6,7 @@ define(['babylon.2.2'], function () {
         this.entity = [];
         this.entityId = 0;
         this.interactions = [];
-        this.moveSpeed = 0.25;
+        this.moveSpeed = 0.5;
         this.user = user;
         this.events = new events();
         this.map = [
