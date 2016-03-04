@@ -15,9 +15,31 @@
             width: 100%;
             height: 100%;
         }
+        .informations{position:absolute;top:0;left:0;font-size:22px;background:white;}
+        .informations_bottom{position:absolute;bottom:0;left:0;font-size:22px;background:white;}
+        .informations > span{color:#FFF;display:block;border-right:2px solid #666;margin:5px;background:#666;padding:5px;width:350px;}
+        .informations > span span{font-weight:bold;}
+        #start{position:absolute;right:40%;top:40%;z-index:101;border-color: transparent transparent transparent #00ffd5;width: 0;height: 0;border-style: solid;border-width:100px 0 100px 173.2px;}
+        #shadow{position:absolute;width:100%;height:100%;background:#666;opacity:0.5;z-index:100;}
     </style>
 </head>
 <body>
+<div class="informations">
+	<span>Gamma <span id="info_gamma"></span></span>
+	<span>Beta <span id="info_beta"></span></span>
+	<span>Alpha <span id="info_alpha"></span></span>
+</div>
+<div class="informations_bottom">
+	<span>Up <span id="info_up"></span></span>
+	<span>Left <span id="info_left"></span></span>
+	<span>Right <span id="info_right"></span></span>
+	<span>Down <span id="info_down"></span></span>
+	<span>Move ? <span id="data_changed"></span></span>
+</div>
+
+<div id="start"></div>
+<div id="shadow"></div>
+
 <canvas id="renderCanvas"></canvas>
 <script data-main="js/bootstrap" src="js/lib/require.js"></script>
 </body>
