@@ -6,7 +6,7 @@ define(['babylon.2.2'], function () {
         this.entity = [];
         this.entityId = 0;
         this.interactions = [];
-        this.moveSpeed = 0.25;
+        this.moveSpeed = 0.5;
         this.user = user;
         this.events = new events();
         this.map = [
@@ -37,6 +37,11 @@ define(['babylon.2.2'], function () {
             var data = JSON.parse(data);
             this.entityId = data.id;
         },
+        /**
+         * Caracters creation
+         * 
+         * @params data {id, position}
+         */
         new: function(data) {
             var data = JSON.parse(data);
             for(var i in data) {
@@ -63,7 +68,7 @@ define(['babylon.2.2'], function () {
                         }
                     }
                 };
-                //Camera target
+                /** Camera target **/
                 if(this.entityId == data[i].id) {
                     this.scene.camera.target = this.entity[data[i].id].object;
                 }
@@ -91,7 +96,7 @@ define(['babylon.2.2'], function () {
             var canvas = document.getElementById(config.game.canvas_id);
             var engine = new BABYLON.Engine(canvas, true);
 
-            // Scene Creation
+            /** Scene Creation **/
             this.scene = new BABYLON.Scene(engine);
 
             this.scene.workerCollisions = false;
@@ -108,57 +113,18 @@ define(['babylon.2.2'], function () {
             this.camera.speed = 0.5;
             this.camera.angularSensibility = 1000;
 
-            // Light
+            /** Light **/
             var light = new BABYLON.PointLight("DirLight", new BABYLON.Vector3(0, 10, 0), this.scene);
             light.diffuse = new BABYLON.Color3(1, 1, 1);
             light.specular = new BABYLON.Color3(0.6, 0.6, 0.6);
             light.intensity = 1.5;
 
-
-            //Attach Action manager to scene
+            /** Attach Action manager to scene **/
             this.scene.actionManager = new BABYLON.ActionManager(this.scene);
 
-            this.scene.registerBeforeRender(function() {
-                if(this.events.hasDataChanged()) {
-                    var prevPosition = this.entity[this.entityId].object.position;
-                    var newPosition;
-                    if (this.events.keys.up == 1) {
-                        newPosition = new BABYLON.Vector3(0, 0, -this.moveSpeed);
-                    }
+            this.scene.registerBeforeRender(this.beforeRender.bind(this));
 
-                    if (this.events.keys.down == 1) {
-                        newPosition = new BABYLON.Vector3(0, 0, this.moveSpeed);
-                    }
-
-                    if (this.events.keys.left == 1) {
-                        newPosition = new BABYLON.Vector3(this.moveSpeed, 0, 0);
-                    }
-
-                    if (this.events.keys.right == 1) {
-                        newPosition = new BABYLON.Vector3(-this.moveSpeed, 0, 0);
-                    }
-
-					var collisions = false;
-                    for(var i =0 ;i< this.interactions.length;i++) {
-                        if(this.entity.length > 0 && this.interactions[i].intersectsMesh(this.entity[this.entityId].object, true)) {
-                            collisions = true;
-                            console.log('collision');
-                        }
-                    }
-                    this.entity[this.entityId].object.moveWithCollisions(newPosition);
-                    this.entity[this.entityId].object.y = 1;
-
-
-                    var data = {};
-                    this.entity[this.entityId].remoteOpts.position = this.entity[this.entityId].object.position;
-                    data[this.entityId] = this.entity[this.entityId].remoteOpts;
-                    if(!this.config.simulation) {
-                        this.user.owner.send(JSON.stringify({f:'entity.update', d:data}));
-                    }
-                }
-            }.bind(this));
-
-            // Runner =)
+            /** Runner =) **/
             var gameScene = this.createScene();
 			var sceneG = this.scene;
             engine.runRenderLoop(function () {
@@ -166,33 +132,46 @@ define(['babylon.2.2'], function () {
             });
         },
         beforeRender : function() {
-			
-			
-        },
-        move: function(evt, instance) {
-            var newPos;
-            switch(evt.sourceEvent.key) {
-                case 'z' :  this.entity[this.entityId].object.position.z = this.entity[this.entityId].object.position.z-1;
-                    break;
-                case 'q' :  this.entity[this.entityId].object.position.x = this.entity[this.entityId].object.position.x+1;
-                    break;
-                case 'd' :  this.entity[this.entityId].object.position.x = this.entity[this.entityId].object.position.x-1;
-                    break;
-                case 's' :  this.entity[this.entityId].object.position.z = this.entity[this.entityId].object.position.z+1;
-                    break;
-            }
-            newPos = new BABYLON.Vector3(this.entity[this.entityId].object.position.x, this.entity[this.entityId].object.position.y, this.entity[this.entityId].object.position.z);
-            this.entity[this.entityId].object.position = newPos;
-            this.entity[this.entityId].remoteOpts.position = this.entity[this.entityId].object.position;
-            var data = {};
-            data[this.entityId] = this.entity[this.entityId].remoteOpts;
-            if(!this.config.simulation) {
-                this.user.owner.send(JSON.stringify({f:'entity.update', d:data}));
-            }
-            this.scene.render();
+			if(this.events.hasDataChanged()) {
+				var prevPosition = this.entity[this.entityId].object.position;
+				var newPosition = new BABYLON.Vector3(0, 0, 0);
+				if (this.events.keys.up == 1) {
+					newPosition.z = -this.moveSpeed;
+				}
+
+				if (this.events.keys.down == 1) {
+					newPosition.z = this.moveSpeed;
+				}
+
+				if (this.events.keys.left == 1) {
+					newPosition.x = this.moveSpeed;
+				}
+
+				if (this.events.keys.right == 1) {
+					newPosition.x = -this.moveSpeed;
+				}
+
+				var collisions = false;
+				for(var i =0 ;i< this.interactions.length;i++) {
+					if(this.entity.length > 0 && this.interactions[i].intersectsMesh(this.entity[this.entityId].object, true)) {
+						collisions = true;
+						console.log('collision');
+					}
+				}
+				this.entity[this.entityId].object.moveWithCollisions(newPosition);
+				this.entity[this.entityId].object.y = 1;
+
+
+				var data = {};
+				this.entity[this.entityId].remoteOpts.position = this.entity[this.entityId].object.position;
+				data[this.entityId] = this.entity[this.entityId].remoteOpts;
+				if(!this.config.simulation) {
+					this.user.owner.send(JSON.stringify({f:'entity.update', d:data}));
+				}
+			}
         },
         createScene: function () {
-            // ground creation
+            /** ground creation **/
             var groundSize = 20;
             var ground = BABYLON.Mesh.CreateGround("ground", 20, 20, 0, this.scene);
             ground.checkCollisions = true;
