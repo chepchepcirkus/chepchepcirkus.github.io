@@ -1,5 +1,18 @@
+/*
+ * Events available
+ * 
+ * loonyball_before_new_entity
+ * loonyball_after_new_entity
+ * loonyball_init
+ * loonyball_delete_entity
+ * loonyball_before_start
+ * loonyball_before_create_scene
+ * loonyball_after_create_scene
+ * 
+ */ 
 define(['babylon.2.2'], function () {
     function loonyball(user, events) {
+		this.entity_code = 'loonyball';
         this.scene = {};
         this.config = {};
         this.camera = {};
@@ -36,6 +49,19 @@ define(['babylon.2.2'], function () {
         init: function(data) {
             var data = JSON.parse(data);
             this.entityId = data.id;
+            /** Dispatch Init Custom Event **/
+            var event = new CustomEvent(
+				this.entity_code + '_init', 
+				{
+					detail: {
+						description:this.entity_code + ' : Init function',
+						data:{
+							id:this.entityId
+							}
+						}
+				}
+			);
+            document.dispatchEvent(event);
         },
         /**
          * Caracters creation
@@ -45,7 +71,21 @@ define(['babylon.2.2'], function () {
         new: function(data) {
             var data = JSON.parse(data);
             for(var i in data) {
-
+				
+				/** Dispatch before new Custom Event **/
+				var event = new CustomEvent(
+					this.entity_code + '_before_new_entity', 
+					{
+						detail: {
+							description:this.entity_code + ' : before create new entity',
+							data:{
+								entity:data
+								}
+							}
+					}
+				);
+				document.dispatchEvent(event);
+				
                 var entityMaterial = new BABYLON.StandardMaterial("eMaterial_" + this.entityId, this.scene);
                 entityMaterial.diffuseColor = new BABYLON.Color3(0.1,0,0);
 
@@ -54,7 +94,7 @@ define(['babylon.2.2'], function () {
                 ent.material = entityMaterial;
                 ent.showBoundingBox = true;
                 ent.checkCollisions = true;
-
+                
                 this.entity[data[i].id] = {
                     owner: data[i].id,
                     entityId: data[i].id,
@@ -68,21 +108,49 @@ define(['babylon.2.2'], function () {
                         }
                     }
                 };
+                
                 /** Camera target **/
                 if(this.entityId == data[i].id) {
                     this.scene.camera.target = this.entity[data[i].id].object;
                 }
+                
+                /** Dispatch after new Custom Event **/
+				event = new CustomEvent(
+					this.entity_code + '_after_new_entity', 
+					{
+						detail: {
+							description:this.entity_code + ' : after create new entity',
+							entity:this.entity[data[i].id]
+							}
+					}
+				);
+				document.dispatchEvent(event);
+				
                 this.scene.render();
             }
         },
         delete: function(connexionId) {
-            var i;
+            var i;			
             for(i in this.entity) {
                 if(this.entity[i].owner == connexionId) {
-                    this.entity[i].object.dispose();
+					/** Dispatch delete entity Custom Event **/
+					var	event = new CustomEvent(
+						this.entity_code + '_delete_entity', 
+						{
+							detail: {
+								description:this.entity_code + ' : delete entity',
+								data:{
+									entity:this.entity[i]
+									}
+								}
+						}
+					);
+					document.dispatchEvent(event);
+					
+					this.entity[i].object.dispose();
                     this.scene.render();
                     this.entity.splice(i);
-                    console.log('entity delete EXECUTED');
+					
                     break;
                 }
             }
@@ -92,7 +160,23 @@ define(['babylon.2.2'], function () {
          * @important Interface method
          */
         start: function (config) {
+			
             this.config = config;
+            
+			/** Dispatch before start function Custom Event **/
+			var	event = new CustomEvent(
+				this.entity_code + '_before_start', 
+				{
+					detail: {
+						description:this.entity_code + ' : before start function',
+						data:{
+							config:this.config
+							}
+						}
+				}
+			);
+			document.dispatchEvent(event);
+			
             var canvas = document.getElementById(config.game.canvas_id);
             var engine = new BABYLON.Engine(canvas, true);
 
@@ -125,9 +209,38 @@ define(['babylon.2.2'], function () {
 
             this.scene.registerBeforeRender(this.beforeRender.bind(this));
 
-            /** Runner =) **/
-            var gameScene = this.createScene();
+            /** Dispatch before create scene Custom Event **/
+			var	event = new CustomEvent(
+				this.entity_code + '_before_create_scene', 
+				{
+					detail: {
+						description:this.entity_code + ' : before create scene function',
+						data:{
+							scene:this.scene
+							}
+						}
+				}
+			);
+			
+			document.dispatchEvent(event);
+			/** Create Scene **/
+            this.createScene();
+            
+			/** Dispatch after create scene Custom Event **/
+			var	event = new CustomEvent(
+				this.entity_code + '_after_create_scene', 
+				{
+					detail: {
+						description:this.entity_code + ' : after create scene function',
+						data:{
+							scene:this.scene
+							}
+						}
+				}
+			);
+			
 			var sceneG = this.scene;
+			/** Render Scene **/
             engine.runRenderLoop(function () {
                 sceneG.render();
             });
