@@ -26,7 +26,7 @@ define(['jquery'], function($) {
             }
         }.bind(this));
 
-        window.addEventListener('keyup',function(event){
+        window.addEventListener('keyup',function(event) {
             if (event.keyCode == 90) {
                 this.keys.up = 0;
             }
@@ -43,7 +43,6 @@ define(['jquery'], function($) {
                 this.dataChanged = false;
             }
         }.bind(this));
-        
         if (window.DeviceOrientationEvent) {
 			console.log("DeviceOrientation is supported");
 			// Listen for the event and handle DeviceOrientationEvent object
@@ -119,7 +118,5 @@ define(['jquery'], function($) {
             return this.dataChanged;
         }
     };
-    
-    
     return events;
 });

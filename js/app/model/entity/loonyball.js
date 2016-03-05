@@ -203,7 +203,6 @@ define(['babylon.2.2'], function () {
             light.specular = new BABYLON.Color3(0.6, 0.6, 0.6);
             light.intensity = 1.5;
 
-
             /** Attach Action manager to scene **/
             this.scene.actionManager = new BABYLON.ActionManager(this.scene);
 
