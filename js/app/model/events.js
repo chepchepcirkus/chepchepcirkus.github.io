@@ -6,6 +6,7 @@ define(['jquery'], function($) {
         this.orientedDiff = 5;
         this.orientedMap = {gamma:0,beta:0,alpha:0};
         this.dataChanged = false;
+                
         window.addEventListener('keydown',function(event){
             if (event.keyCode == 90){
                 this.keys.up = 1;
