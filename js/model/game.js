@@ -5,15 +5,15 @@ define(function () {
     }
 
     game.prototype = {
-        init : function (config, user, entity, events) {
+        init : function (entity) {
             /**
              * Initialize custom scope
              * Declare below scope to use by application
              */
-            this.entity = new entity(user, events);
-            this.config = config;
+            this.entity = new entity();
+            this.config = CHEPK.config;
             var data = [
-                {'user': user},
+                {'user': CHEPK.user},
                 {'entity' : this.entity}
             ];
 

@@ -10,8 +10,10 @@
  * loonyball_after_create_scene
  * 
  */ 
-define(['babylon.2.2'], function () {
-    function loonyball(user, events) {
+define([
+		 'lib/babylon.2.2'
+	], function (babylon) {
+    function loonyball() {
 		this.entity_code = 'loonyball';
         this.scene = {};
         this.config = {};
@@ -20,8 +22,8 @@ define(['babylon.2.2'], function () {
         this.entityId = 0;
         this.interactions = [];
         this.moveSpeed = 0.5;
-        this.user = user;
-        this.events = new events();
+        this.user = CHEPK.user;
+        this.events = CHEPK.layout.events;
         this.map = [
             [],
             [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],
@@ -61,7 +63,7 @@ define(['babylon.2.2'], function () {
 						}
 				}
 			);
-            document.dispatchEvent(event);
+            window.dispatchEvent(event);
         },
         /**
          * Caracters creation
@@ -84,7 +86,7 @@ define(['babylon.2.2'], function () {
 							}
 					}
 				);
-				document.dispatchEvent(event);
+				window.dispatchEvent(event);
 				
                 var entityMaterial = new BABYLON.StandardMaterial("eMaterial_" + this.entityId, this.scene);
                 entityMaterial.diffuseColor = new BABYLON.Color3(0.1,0,0);
@@ -124,7 +126,7 @@ define(['babylon.2.2'], function () {
 							}
 					}
 				);
-				document.dispatchEvent(event);
+				window.dispatchEvent(event);
 				
                 this.scene.render();
             }
@@ -145,7 +147,7 @@ define(['babylon.2.2'], function () {
 								}
 						}
 					);
-					document.dispatchEvent(event);
+					window.dispatchEvent(event);
 					
 					this.entity[i].object.dispose();
                     this.scene.render();
@@ -175,9 +177,9 @@ define(['babylon.2.2'], function () {
 						}
 				}
 			);
-			document.dispatchEvent(event);
+			window.dispatchEvent(event);
 			
-            var canvas = document.getElementById(config.game.canvas_id);
+            var canvas = document.getElementById(config.layout.canvas);
             var engine = new BABYLON.Engine(canvas, true);
 
             /** Scene Creation **/
@@ -209,7 +211,7 @@ define(['babylon.2.2'], function () {
             this.scene.registerBeforeRender(this.beforeRender.bind(this));
 
             /** Dispatch before create scene Custom Event **/
-			var	event = new CustomEvent(
+			event = new CustomEvent(
 				this.entity_code + '_before_create_scene', 
 				{
 					detail: {
@@ -221,12 +223,12 @@ define(['babylon.2.2'], function () {
 				}
 			);
 			
-			document.dispatchEvent(event);
+			window.dispatchEvent(event);
 			/** Create Scene **/
             this.createScene();
             
 			/** Dispatch after create scene Custom Event **/
-			var	event = new CustomEvent(
+			event = new CustomEvent(
 				this.entity_code + '_after_create_scene', 
 				{
 					detail: {
@@ -237,12 +239,27 @@ define(['babylon.2.2'], function () {
 						}
 				}
 			);
+			window.dispatchEvent(event);
 			
 			var sceneG = this.scene;
 			/** Render Scene **/
             engine.runRenderLoop(function () {
                 sceneG.render();
             });
+            
+			/** Dispatch after rebder scene Custom Event **/
+			event = new CustomEvent(
+				this.entity_code + '_after_render_scene', 
+				{
+					detail: {
+						description:this.entity_code + ' : after render scene function',
+						data:{
+							scene:this.scene
+							}
+						}
+				}
+			);
+            window.dispatchEvent(event);
         },
         beforeRender : function() {
 			if(this.events.hasDataChanged()) {
@@ -334,7 +351,7 @@ define(['babylon.2.2'], function () {
                 this.entity[data[i].id].remoteOpts.position = this.entity[data[i].id].object.position;
                 this.scene.render();
             }
-        }
+        },
     };
     return loonyball;
 });
