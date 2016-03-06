@@ -1,12 +1,13 @@
-define(['jquery'], function($) {
+define(['lib/jquery'], function() {
     function events () {
+		var $j = jQuery.noConflict();
         this.keys = {up:0,down:0,left:0,right:0};
         this.defaultOrientedPosDefined = false;
         this.defaultOrientedPos = {gamma:0,beta:0,alpha:0};
         this.orientedDiff = 5;
         this.orientedMap = {gamma:0,beta:0,alpha:0};
         this.dataChanged = false;
-                
+
         window.addEventListener('keydown',function(event){
             if (event.keyCode == 90){
                 this.keys.up = 1;
@@ -49,9 +50,9 @@ define(['jquery'], function($) {
 			
 			window.addEventListener('deviceorientation', function(eventOrientData) {
 				// Debug Control
-				$('#info_alpha').html(this.defaultOrientedPos.alpha + ' || ' + this.orientedMap.alpha);
-				$('#info_beta').html(this.defaultOrientedPos.beta + ' || ' + this.orientedMap.beta);
-				$('#info_gamma').html(this.defaultOrientedPos.gamma + ' || ' + this.orientedMap.gamma);
+				$j('#info_alpha').html(this.defaultOrientedPos.alpha + ' || ' + this.orientedMap.alpha);
+				$j('#info_beta').html(this.defaultOrientedPos.beta + ' || ' + this.orientedMap.beta);
+				$j('#info_gamma').html(this.defaultOrientedPos.gamma + ' || ' + this.orientedMap.gamma);
 				
 				this.orientedMap.alpha = eventOrientData.alpha;
 				this.orientedMap.beta = eventOrientData.beta;
@@ -94,21 +95,21 @@ define(['jquery'], function($) {
 					}
 				}
 				
-				$('#info_up').html(this.keys.up);
-				$('#info_down').html(this.keys.down);
-				$('#info_left').html(this.keys.left);
-				$('#info_right').html(this.keys.right);
-				$('#data_changed').html(((this.dataChanged)?1:0));
+				$j('#info_up').html(this.keys.up);
+				$j('#info_down').html(this.keys.down);
+				$j('#info_left').html(this.keys.left);
+				$j('#info_right').html(this.keys.right);
+				$j('#data_changed').html(((this.dataChanged)?1:0));
 				
 			}.bind(this), false);
 			
-			$('#start').on('click', function() {
+			$j('#start').on('click', function() {
 				this.defaultOrientedPosDefined = true;
 				this.defaultOrientedPos.alpha = this.orientedMap.alpha;
 				this.defaultOrientedPos.beta = this.orientedMap.beta;
 				this.defaultOrientedPos.gamma = this.orientedMap.gamma;
-				$('#start').hide();
-				$('#shadow').hide();
+				$j('#start').hide();
+				$j('#shadow').hide();
 			}.bind(this));
 		}
     }
