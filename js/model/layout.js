@@ -1,9 +1,8 @@
 define(['lib/jquery'], function () {
     function layout() {
-		var $ = jQuery.noConflict();
 		this.events = {};
-        this.canvas = $(CHEPK.config.layout.canvas);
-        this.message = $(CHEPK.config.layout.messages);
+        this.canvas = CHEPK.config.layout.canvas;
+        this.messages = CHEPK.config.layout.messages;
     }
 
     layout.prototype = {
@@ -21,7 +20,13 @@ define(['lib/jquery'], function () {
 				}
 			);
             window.dispatchEvent(event);
-        }
+        },
+        
+        flushMessages : function() {
+			jQuery('#' + this.messages).find('div').each(function(index, el) {
+				jQuery(el).remove();
+			});
+		}
     };
 
     return layout;

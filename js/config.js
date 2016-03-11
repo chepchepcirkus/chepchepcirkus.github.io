@@ -4,7 +4,7 @@ define(function () {
         simulation:true,
         layout: {
 			canvas : 'renderCanvas',
-			message : 'messages',
+			messages : 'messages',
 		},
 		game: {
             entity: 'loonyball',
