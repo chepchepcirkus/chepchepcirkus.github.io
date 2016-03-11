@@ -2,47 +2,45 @@
 <html lang="fr">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="HandheldFriendly" content="true">
     <title>LoOnYbAlL</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-        }
-        canvas {
-            width: 100%;
-            height: 100%;
-        }
-        .informations{position:absolute;top:0;left:0;font-size:22px;background:white;}
-        .informations_bottom{position:absolute;bottom:0;left:0;font-size:22px;background:white;}
-        .informations > span{color:#FFF;display:block;border-right:2px solid #666;margin:5px;background:#666;padding:5px;width:350px;}
-        .informations > span span{font-weight:bold;}
-        #start{position:absolute;right:40%;top:40%;z-index:101;border-color: transparent transparent transparent #00ffd5;width: 0;height: 0;border-style: solid;border-width:100px 0 100px 173.2px;}
-        #shadow{position:absolute;width:100%;height:100%;background:#FFF;opacity:1;z-index:100;}
-        #loader{position:absolute;width:100%;height:100%;background:url('images/loader.gif') no-repeat center center;z-index:105;}
-    </style>
+    <link href="style.css" rel="stylesheet" />
 </head>
 <body>
-<div class="informations">
-	<span>Gamma <span id="info_gamma"></span></span>
-	<span>Beta <span id="info_beta"></span></span>
-	<span>Alpha <span id="info_alpha"></span></span>
+<div id="top">
+	<div id="messages">
+		<div class="error">Error Alert</div>
+		<div class="warning">Warning Alert</div>
+		<div class="success">Success Alert</div>
+	</div>
+	<div class="debug">
+		<ul>
+			<li>Gamma <span id="info_gamma"></span></li>
+			<li>Beta <span id="info_beta"></span></li>
+			<li>Alpha <span id="info_alpha"></span></li>
+		</ul>
+	</div>
 </div>
-<div class="informations_bottom">
-	<span>Up <span id="info_up"></span></span>
-	<span>Left <span id="info_left"></span></span>
-	<span>Right <span id="info_right"></span></span>
-	<span>Down <span id="info_down"></span></span>
-	<span>Move ? <span id="data_changed"></span></span>
-</div>
+<div id="left"></div>
+<div id="center">
 
+</div>
+<div id="right"></div>
+<div id="bottom">
+	<div class="debug">
+		<ul>
+			<li>Up <span id="info_up"></span></li>
+			<li>Left <span id="info_left"></span></li>
+			<li>Right <span id="info_right"></span></li>
+			<li>Down <span id="info_down"></span></li>
+			<li>Move ? <span id="data_changed"></span></li>
+		</ul>
+	</div>
+</div>
+<div id="shadow"></div>
 <div id="start" style="display:none;"></div>
 <div id="loader"></div>
-<div id="shadow"></div>
-<div id="messages"></div>
-
 <canvas id="renderCanvas"></canvas>
 <script data-main="js/app.js" src="js/lib/require.js"></script>
 </body>
