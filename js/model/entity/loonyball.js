@@ -11,7 +11,8 @@
  * 
  */ 
 define([
-		 'lib/babylon.2.2'
+		 'lib/babylon.2.2',
+		 'lib/hand-1.1.3'
 	], function (babylon) {
     function loonyball() {
 		this.entity_code = 'loonyball';
@@ -24,6 +25,9 @@ define([
         this.moveSpeed = 0.5;
         this.user = CHEPK.user;
         this.events = CHEPK.layout.events;
+		this.cameraPos = '';
+		this.cameraRot = '';
+		this.viewFromTop = false;
         this.map = [
             [],
             [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],
@@ -91,8 +95,9 @@ define([
                 var entityMaterial = new BABYLON.StandardMaterial("eMaterial_" + this.entityId, this.scene);
                 entityMaterial.diffuseColor = new BABYLON.Color3(0.1,0,0);
 
-                var ent = BABYLON.Mesh.CreateSphere("sphere_" + this.entityId, 20, 0.9, this.scene);
+                var ent = BABYLON.Mesh.CreateSphere("sphere_" + this.entityId, 10, 0.5, this.scene);
                 ent.position = new BABYLON.Vector3(data[i].position.x, data[i].position.y, data[i].position.z);
+                ent.rotation = new BABYLON.Vector3(0, 0, 0);
                 ent.material = entityMaterial;
                 ent.showBoundingBox = true;
                 ent.checkCollisions = true;
@@ -114,6 +119,7 @@ define([
                 /** Camera target **/
                 if(this.entityId == data[i].id) {
                     this.scene.camera.target = this.entity[data[i].id].object;
+                    //this.entity[data[i].id].object.parent = this.scene.camera;
                 }
                 
                 /** Dispatch after new Custom Event **/
@@ -187,17 +193,39 @@ define([
 
             this.scene.workerCollisions = false;
             this.scene.collisionsEnabled = true;
+            this.scene.gravity = new BABYLON.Vector3(0, -9.81, 0);
 
-            this.scene.camera = new BABYLON.ArcRotateCamera("ArcRotateCamera",  0.8, 0.3, 25, new BABYLON.Vector3(0, 5, 2), this.scene);
+			// Camera ArcRotate
+            /*this.scene.camera = new BABYLON.ArcRotateCamera("ArcRotateCamera",  0.8, 0.3, 25, new BABYLON.Vector3(0, 5, 2), this.scene);
+            this.scene.camera.applyGravity = true;
+            this.scene.camera.checkCollisions = true;
+            this.scene.camera.speed = 0.5;
+            this.scene.camera.angularSensibility = 1000;*/
 
-            this.camera.applyGravity = true;
-            this.camera.checkCollisions = true;
+			//Camera Free
+			/*this.scene.camera = new BABYLON.FreeCamera("free", new BABYLON.Vector3(0, 1, 0), this.scene);
+			this.scene.camera.minZ = 0.5;
+			this.scene.camera.checkCollisions = true;
+			this.scene.camera.applyGravity = true;
+			this.scene.camera.ellipsoid = new BABYLON.Vector3(0, 0, 1);
+			this.scene.camera.speed = 0.2;
+			this.scene.camera.angularSensibility = 1000;
+			
+			this.scene.camera.keysUp = [90]; // Touche Z
+			this.scene.camera.keysDown = [83]; // Touche S
+			this.scene.camera.keysLeft = [81]; // Touche Q
+			this.scene.camera.keysRight = [68]; // Touche D;*/
+			
+			//FollowCamera
+			this.scene.camera = new BABYLON.FollowCamera("FollowCam", new BABYLON.Vector3(0, 15, -45), this.scene);
+			this.scene.camera.radius = 3;
+			this.scene.camera.heightOffset = 2;
+			this.scene.camera.rotationOffset = 0;
+			this.scene.camera.cameraAcceleration = 0.2;
+			this.scene.camera.maxCameraSpeed = 70;
 
             /** Attach control keybord and mouses to camera **/
-            this.scene.activeCamera.attachControl(canvas);
-
-            this.camera.speed = 0.5;
-            this.camera.angularSensibility = 1000;
+            this.scene.activeCamera.attachControl(canvas); 
 
             /** Light **/
             var light = new BABYLON.PointLight("DirLight", new BABYLON.Vector3(0, 10, 0), this.scene);
@@ -246,8 +274,10 @@ define([
             engine.runRenderLoop(function () {
                 sceneG.render();
             });
-            
-			/** Dispatch after rebder scene Custom Event **/
+            window.addEventListener("resize", function () {
+                engine.resize();
+            });
+		    /** Dispatch after rebder scene Custom Event **/
 			event = new CustomEvent(
 				this.entity_code + '_after_render_scene', 
 				{
@@ -261,24 +291,101 @@ define([
 			);
             window.dispatchEvent(event);
         },
-        beforeRender : function() {
+        beforeRender : function() {			
+			/** Dispatch before render from events **/
+			var event = new CustomEvent(
+				this.entity_code + '_before_render_event', 
+				{
+					detail: {
+						description:this.entity_code + ' : before render event function',
+						data:{
+							event:this.events
+							}
+						}
+				}
+			);
+			window.dispatchEvent(event);
+			if(this.events.joystickRight != '' && this.events.joystickRight.right()){
+				this.events.keys.rotate.right = 1;	
+				this.events.dataChanged = true;
+			} else {
+				this.events.keys.rotate.right = 0;
+				this.events.dataChanged = true;
+			}
+			if(this.events.joystickRight != '' && this.events.joystickRight.left()){
+				this.events.keys.rotate.left = 1;
+				this.events.dataChanged = true;				
+			} else {
+				this.events.keys.rotate.left = 0;
+				this.events.dataChanged = true;
+			}
+			if(this.events.joystickLeft != '' && this.events.joystickLeft.up()){
+				this.events.keys.up = 1;	
+				this.events.dataChanged = true;
+			} else {
+				this.events.keys.up = 0;
+				this.events.dataChanged = true;
+			}
+			if(this.events.joystickLeft != '' && this.events.joystickLeft.down()){
+				this.events.keys.down = 1;
+				this.events.dataChanged = true;				
+			} else {
+				this.events.keys.down = 0;
+				this.events.dataChanged = true;
+			}
+			if(this.events.joystickLeft != '' && this.events.joystickLeft.right()){
+				this.events.keys.right = 1;
+				this.events.dataChanged = true;				
+			} else {
+				this.events.keys.right = 0;
+				this.events.dataChanged = true;
+			}
+			if(this.events.joystickLeft != '' && this.events.joystickLeft.left()){
+				this.events.keys.left = 1;
+				this.events.dataChanged = true;				
+			} else {
+				this.events.keys.left = 0;
+				this.events.dataChanged = true;
+			}
 			if(this.events.hasDataChanged()) {
 				var prevPosition = this.entity[this.entityId].object.position;
 				var newPosition = new BABYLON.Vector3(0, 0, 0);
+				var newRotation = this.entity[this.entityId].object.rotation;
+			
 				if (this.events.keys.up == 1) {
-					newPosition.z = -this.moveSpeed;
+					var direction = this.getForwardVector(this.scene.camera.rotation, new BABYLON.Vector3(0, 0, 1));
+					newPosition.z = direction.z * this.moveSpeed;
+					newPosition.y = 0;
+					newPosition.x = direction.x * this.moveSpeed;
 				}
 
 				if (this.events.keys.down == 1) {
-					newPosition.z = this.moveSpeed;
+					var direction = this.getForwardVector(this.scene.camera.rotation, new BABYLON.Vector3(0, 0, -1));
+					newPosition.z = direction.z * this.moveSpeed;
+					newPosition.y = 0;
+					newPosition.x = direction.x * this.moveSpeed;
 				}
 
 				if (this.events.keys.left == 1) {
-					newPosition.x = this.moveSpeed;
+					var direction = this.getForwardVector(this.scene.camera.rotation, new BABYLON.Vector3(-1, 0, 0));
+					newPosition.z = direction.z * this.moveSpeed;
+					newPosition.y = 0;
+					newPosition.x = direction.x * this.moveSpeed;
 				}
 
 				if (this.events.keys.right == 1) {
-					newPosition.x = -this.moveSpeed;
+					var direction = this.getForwardVector(this.scene.camera.rotation, new BABYLON.Vector3(1, 0, 0));
+					newPosition.z = direction.z * this.moveSpeed;
+					newPosition.y = 0;
+					newPosition.x = direction.x * this.moveSpeed;
+				}
+				
+				if(this.events.keys.rotate.left == 1) {
+					newRotation.y = this.entity[this.entityId].object.rotation.y - 0.2;
+				}
+
+				if(this.events.keys.rotate.right == 1) {
+					newRotation.y = this.entity[this.entityId].object.rotation.y + 0.2;
 				}
 
 				var collisions = false;
@@ -288,9 +395,10 @@ define([
 						console.log('collision');
 					}
 				}
+				
+				this.entity[this.entityId].object.rotation = newRotation;
+				newPosition.y = 0;
 				this.entity[this.entityId].object.moveWithCollisions(newPosition);
-				this.entity[this.entityId].object.y = 1;
-
 
 				var data = {};
 				this.entity[this.entityId].remoteOpts.position = this.entity[this.entityId].object.position;
@@ -300,6 +408,11 @@ define([
 				}
 			}
         },
+        getForwardVector: function (rotation, axe) {
+			var rotationMatrix = BABYLON.Matrix.RotationYawPitchRoll(rotation.y, rotation.x, rotation.z);   
+			var forward = BABYLON.Vector3.TransformCoordinates(axe, rotationMatrix);
+			return forward;
+		},
         createScene: function () {
             /** ground creation **/
             var groundSize = 20;
@@ -352,6 +465,70 @@ define([
                 this.scene.render();
             }
         },
+		moveCamera : function (freeCamera, fromPosition, toPosition, fromRotation, toRotation) {
+
+			var animCamPosition = new BABYLON.Animation("animCam", "position", 70,
+									  BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
+									  BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+			var keysPosition = [];
+			keysPosition.push({
+				frame: 0,
+				value: fromPosition
+			});
+			keysPosition.push({
+				frame: 100,
+				value: toPosition
+			});
+
+			animCamPosition.setKeys(keysPosition);
+
+			var animCamRotation = new BABYLON.Animation("animCam", "rotation", 70,
+									  BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
+									  BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+			var keysRotation = [];
+			keysRotation.push({
+				frame: 0,
+				value: fromRotation
+			});
+			keysRotation.push({
+				frame: 100,
+				value: toRotation
+			});
+
+			animCamRotation.setKeys(keysRotation);
+			this.scene.camera.animations.push(animCamPosition);
+			this.scene.camera.animations.push(animCamRotation);
+
+			this.scene.beginAnimation(this.scene.camera, 0, 100, false);
+		},
+		switchView : function() {
+			if (!this.viewFromTop) {
+				this.viewFromTop = true;
+				// Saving current position & rotation in the maze
+				this.cameraPos = this.scene.camera.position;
+				this.cameraRot = this.scene.camera.rotation;
+				this.moveCamera(
+					this.scene.camera,
+					this.scene.camera.position,
+					new BABYLON.Vector3(0, 50, 0),
+					this.scene.camera.rotation,
+					new BABYLON.Vector3(1.4912565104551518, 3.1, this.scene.camera.rotation.z)
+				);
+			}
+			else {
+				this.viewFromTop = false;
+				this.moveCamera(
+					this.scene.camera,
+					this.scene.camera.position,
+					this.cameraPos,
+					this.scene.camera.rotation,
+					this.cameraRot
+				);
+			}
+			this.scene.camera.applyGravity = !this.viewFromTop;
+		}
     };
     return loonyball;
 });

@@ -9,7 +9,7 @@ define(function() {
 		window.addEventListener('loonyball_after_render_scene', function (event) {
 			CHEPK.layout.shadow.css({'backgroundColor':'#666', 'opacity':'0.5'});
 			CHEPK.layout.loader.hide();
-			jQuery('#start').show();
+			jQuery('.controller-type').toggle();
 		});
 	}
 	return loaderPlugin;

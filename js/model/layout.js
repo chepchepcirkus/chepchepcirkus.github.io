@@ -1,6 +1,18 @@
+/*
+ * @var messages : different type of message
+ * 
+ * <div class="error">Error Alert</div>
+ * <div class="warning">Warning Alert</div>
+ * <div class="success">Success Alert</div>
+ * 
+ * 
+ */ 
 define(['lib/jquery'], function () {
     function layout() {
 		this.events = {};
+		if(CHEPK.config == undefined) {
+			 throw 'CHEPK.config is not loaded';
+		}
         this.canvas = CHEPK.config.layout.canvas;
         this.messages = CHEPK.config.layout.messages;
     }
