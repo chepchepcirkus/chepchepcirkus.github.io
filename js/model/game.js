@@ -1,7 +1,13 @@
 define(function () {
     function game() {
-        this.entity = '';
+		if(CHEPK.config == undefined) {
+			throw 'CHEPK.config is not loaded';
+		} else if(CHEPK.user == undefined) {
+			throw 'CHEPK.user is not loaded';
+		}
+        this.entityCode = '';
         this.config = '';
+        this.controller = '';
     }
 
     game.prototype = {
@@ -10,11 +16,13 @@ define(function () {
              * Initialize custom scope
              * Declare below scope to use by application
              */
-            this.entity = new entity();
+            var entity = new entity();
+            this.entityCode = entity.entity_code;
+            this[this.entityCode] = entity;
             this.config = CHEPK.config;
             var data = [
                 {'user': CHEPK.user},
-                {'entity' : this.entity}
+                {'entity' : this[this.entityCode]}
             ];
 
             this.config.scope = [];
@@ -29,10 +37,10 @@ define(function () {
             return this;
         },
         start : function () {
-            this.entity.start(this.config);
+            this[this.entityCode].start(this.config);
             if(this.config.simulation) {
-				this.entity.init(JSON.stringify({id:1}));
-				this.entity.new(JSON.stringify([{
+                this[this.entityCode].init(JSON.stringify({id:1}));
+                this[this.entityCode].new(JSON.stringify([{
 						id:1,
 						position : {
 							x: -0.5 ,

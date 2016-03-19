@@ -10,25 +10,23 @@
 <body>
 <div id="top">
 	<div id="messages">
-		<div class="error">Error Alert</div>
-		<div class="warning">Warning Alert</div>
-		<div class="success">Success Alert</div>
 	</div>
-	<div class="debug">
+	<!--<div class="debug">
 		<ul>
 			<li>Gamma <span id="info_gamma"></span></li>
 			<li>Beta <span id="info_beta"></span></li>
 			<li>Alpha <span id="info_alpha"></span></li>
 		</ul>
-	</div>
+	</div>-->
 </div>
 <div id="left"></div>
 <div id="center">
-
+	<div class="controller-type" id="joystick" style="display:none;"></div>
+	<div class="controller-type" id="keyboard" style="display:none;"></div>
 </div>
 <div id="right"></div>
 <div id="bottom">
-	<div class="debug">
+	<!--<div class="debug">
 		<ul>
 			<li>Up <span id="info_up"></span></li>
 			<li>Left <span id="info_left"></span></li>
@@ -37,9 +35,9 @@
 			<li>Move ? <span id="data_changed"></span></li>
 		</ul>
 	</div>
+	-->
 </div>
 <div id="shadow"></div>
-<div id="start" style="display:none;"></div>
 <div id="loader"></div>
 <canvas id="renderCanvas"></canvas>
 <script data-main="js/app.js" src="js/lib/require.js"></script>

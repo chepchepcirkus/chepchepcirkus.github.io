@@ -15,9 +15,9 @@ require(
 		try{
 			window.CHEPK = {};
 			CHEPK.config = config;
+			CHEPK.layout = new layout();
 			CHEPK.user = new user();
 			CHEPK.game = new game();
-			CHEPK.layout = new layout();
 			CHEPK.plugins = [];
 			if(plugins.length > 0) {
 				for(var i=0;i<=plugins.length;i++) {
@@ -29,6 +29,10 @@ require(
 			CHEPK.layout.init(events);
 			CHEPK.game.init(entity).start();
 		} catch(exception) {
-			alert(exception);
+			if(CHEPK.config.debug == true) {
+				document.getElementById('messages').innerHTML = '<div class="error">' + exception + '</div>';
+			} else {
+				document.getElementById('messages').innerHTML = '<div class="error">Oups ... An error occured!</div>';
+			}
 		}
 });
