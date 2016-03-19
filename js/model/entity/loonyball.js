@@ -305,47 +305,59 @@ define([
 				}
 			);
 			window.dispatchEvent(event);
-			if(this.events.joystickRight != '' && this.events.joystickRight.right()){
-				this.events.keys.rotate.right = 1;	
-				this.events.dataChanged = true;
-			} else {
-				this.events.keys.rotate.right = 0;
-				this.events.dataChanged = true;
+			if(this.events.joystickRight != '') {
+				if(this.events.joystickRight.right()){
+					this.events.keys.rotate.right = 1;	
+					this.events.dataChanged = true;
+				} else {
+					this.events.keys.rotate.right = 0;
+					this.events.dataChanged = true;
+				}
 			}
-			if(this.events.joystickRight != '' && this.events.joystickRight.left()){
-				this.events.keys.rotate.left = 1;
-				this.events.dataChanged = true;				
-			} else {
-				this.events.keys.rotate.left = 0;
-				this.events.dataChanged = true;
+			if(this.events.joystickRight != ''){
+				if(this.events.joystickRight.left()){
+					this.events.keys.rotate.left = 1;
+					this.events.dataChanged = true;				
+				} else {
+					this.events.keys.rotate.left = 0;
+					this.events.dataChanged = true;
+				}
 			}
-			if(this.events.joystickLeft != '' && this.events.joystickLeft.up()){
-				this.events.keys.up = 1;	
-				this.events.dataChanged = true;
-			} else {
-				this.events.keys.up = 0;
-				this.events.dataChanged = true;
+			if(this.events.joystickLeft != '') {
+				if(this.events.joystickLeft.up()){
+					this.events.keys.up = 1;	
+					this.events.dataChanged = true;
+				} else {
+					this.events.keys.up = 0;
+					this.events.dataChanged = true;
+				}
 			}
-			if(this.events.joystickLeft != '' && this.events.joystickLeft.down()){
-				this.events.keys.down = 1;
-				this.events.dataChanged = true;				
-			} else {
-				this.events.keys.down = 0;
-				this.events.dataChanged = true;
+			if(this.events.joystickLeft != '') {
+				if(this.events.joystickLeft.down()){
+					this.events.keys.down = 1;
+					this.events.dataChanged = true;				
+				} else {
+					this.events.keys.down = 0;
+					this.events.dataChanged = true;
+				}
 			}
-			if(this.events.joystickLeft != '' && this.events.joystickLeft.right()){
-				this.events.keys.right = 1;
-				this.events.dataChanged = true;				
-			} else {
-				this.events.keys.right = 0;
-				this.events.dataChanged = true;
+			if(this.events.joystickLeft != '') {
+				if(this.events.joystickLeft.right()){
+					this.events.keys.right = 1;
+					this.events.dataChanged = true;				
+				} else {
+					this.events.keys.right = 0;
+					this.events.dataChanged = true;
+				}
 			}
-			if(this.events.joystickLeft != '' && this.events.joystickLeft.left()){
-				this.events.keys.left = 1;
-				this.events.dataChanged = true;				
-			} else {
-				this.events.keys.left = 0;
-				this.events.dataChanged = true;
+			if(this.events.joystickLeft != '') {
+				if(this.events.joystickLeft.left()){
+					this.events.keys.left = 1;
+					this.events.dataChanged = true;				
+				} else {
+					this.events.keys.left = 0;
+					this.events.dataChanged = true;
+				}
 			}
 			if(this.events.hasDataChanged()) {
 				var prevPosition = this.entity[this.entityId].object.position;
