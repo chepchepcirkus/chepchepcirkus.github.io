@@ -90,7 +90,18 @@ define(['lib/jquery','lib/virtualjoystick'], function() {
 				break;
 				
 				case 'joystick' :
-					this.joystickLeft	= new VirtualJoystick({
+
+					this.joystickRight	= new VirtualJoystick({
+						strokeStyle	: 'orange',
+						limitStickTravel: true,
+						stickRadius	: 120,
+						mouseSupport : true 	
+					});
+					this.joystickRight.addEventListener('touchStartValidation', function(event){
+						var touch	= event.changedTouches[0];
+						if( touch.pageX >= window.innerWidth/2 )	return false;
+						return true
+					});					this.joystickLeft	= new VirtualJoystick({
 						//container	: document.getElementById('left'),
 						strokeStyle	: 'cyan',
 						limitStickTravel: true,
@@ -103,17 +114,6 @@ define(['lib/jquery','lib/virtualjoystick'], function() {
 						return true
 					});
 
-					this.joystickRight	= new VirtualJoystick({
-						strokeStyle	: 'orange',
-						limitStickTravel: true,
-						stickRadius	: 120,
-						mouseSupport : true 	
-					});
-					this.joystickRight.addEventListener('touchStartValidation', function(event){
-						var touch	= event.changedTouches[0];
-						if( touch.pageX >= window.innerWidth/2 )	return false;
-						return true
-					});
 				break;
 				
 				default :
