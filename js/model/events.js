@@ -99,7 +99,7 @@ define(['lib/jquery','lib/virtualjoystick'], function() {
 					});
 					this.joystickRight.addEventListener('touchStartValidation', function(event){
 						var touch	= event.changedTouches[0];
-						if( touch.pageX >= window.innerWidth/2 )	return false;
+						if( touch.pageX < window.innerWidth/2 )	return false;
 						return true
 					});					this.joystickLeft	= new VirtualJoystick({
 						//container	: document.getElementById('left'),
@@ -110,7 +110,7 @@ define(['lib/jquery','lib/virtualjoystick'], function() {
 					});
 					this.joystickLeft.addEventListener('touchStartValidation', function(event){
 						var touch	= event.changedTouches[0];
-						if( touch.pageX < window.innerWidth/2 )	return false;
+						if( touch.pageX >= window.innerWidth/2 )	return false;
 						return true
 					});
 
