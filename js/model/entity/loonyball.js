@@ -22,7 +22,7 @@ define([
         this.entity = [];
         this.entityId = 0;
         this.interactions = [];
-        this.moveSpeed = 0.5;
+        this.moveSpeed = 0.2;
         this.user = CHEPK.user;
         this.events = CHEPK.layout.events;
 		this.cameraPos = '';
@@ -77,10 +77,10 @@ define([
         new: function(data) {
             var data = JSON.parse(data);
             for(var i in data) {
-				
+
 				/** Dispatch before new Custom Event **/
 				var event = new CustomEvent(
-					this.entity_code + '_before_new_entity', 
+					this.entity_code + '_before_new_entity',
 					{
 						detail: {
 							description:this.entity_code + ' : before create new entity',
@@ -91,7 +91,7 @@ define([
 					}
 				);
 				window.dispatchEvent(event);
-				
+
                 var entityMaterial = new BABYLON.StandardMaterial("eMaterial_" + this.entityId, this.scene);
                 entityMaterial.diffuseColor = new BABYLON.Color3(0.1,0,0);
 
@@ -101,7 +101,7 @@ define([
                 ent.material = entityMaterial;
                 ent.showBoundingBox = true;
                 ent.checkCollisions = true;
-                
+
                 this.entity[data[i].id] = {
                     owner: data[i].id,
                     entityId: data[i].id,
@@ -115,16 +115,15 @@ define([
                         }
                     }
                 };
-                
+
                 /** Camera target **/
                 if(this.entityId == data[i].id) {
                     this.scene.camera.target = this.entity[data[i].id].object;
-                    //this.entity[data[i].id].object.parent = this.scene.camera;
                 }
-                
+
                 /** Dispatch after new Custom Event **/
 				event = new CustomEvent(
-					this.entity_code + '_after_new_entity', 
+					this.entity_code + '_after_new_entity',
 					{
 						detail: {
 							description:this.entity_code + ' : after create new entity',
@@ -133,7 +132,7 @@ define([
 					}
 				);
 				window.dispatchEvent(event);
-				
+
                 this.scene.render();
             }
         },
@@ -217,9 +216,9 @@ define([
 			this.scene.camera.keysRight = [68]; // Touche D;*/
 			
 			//FollowCamera
-			this.scene.camera = new BABYLON.FollowCamera("FollowCam", new BABYLON.Vector3(0, 15, -45), this.scene);
+			this.scene.camera = new BABYLON.FollowCamera("FollowCam", new BABYLON.Vector3(0, 0, 0), this.scene);
 			this.scene.camera.radius = 3;
-			this.scene.camera.heightOffset = 2;
+			this.scene.camera.heightOffset = 1;
 			this.scene.camera.rotationOffset = 0;
 			this.scene.camera.cameraAcceleration = 0.2;
 			this.scene.camera.maxCameraSpeed = 70;
@@ -274,6 +273,7 @@ define([
             engine.runRenderLoop(function () {
                 sceneG.render();
             });
+
             window.addEventListener("resize", function () {
                 engine.resize();
             });
@@ -454,14 +454,22 @@ define([
                             }
                         }
                         if(!found) {
-                            var box = dummy.clone('box-' + x + '_' + y);
+							if(y == groundSize) {
+								var box = dummy;
+							} else {
+								var box = dummy.clone('box-' + x + '_' + y);
+							}
                             box.position = new BABYLON.Vector3(y-(groundSize/2-0.5), cubeSize / 2, (x-groundSize/2-0.5));
                             this.interactions.push(box);
 						}
                     }
                 } else {
                     for (var x = 1; x <= groundSize; x++) {
-                        var box = dummy.clone('box-' + x + '_' + y);
+						if(x == groundSize) {
+							var box = dummy;
+						} else {
+							var box = dummy.clone('box-' + x + '_' + y);
+						}
                         box.position = new BABYLON.Vector3(y-(groundSize/2-0.5), cubeSize / 2, (x-groundSize/2-0.5));
                         this.interactions.push(box);
 					}
