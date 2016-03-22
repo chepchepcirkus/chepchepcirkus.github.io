@@ -40,14 +40,26 @@ define(function () {
             this[this.entityCode].start(this.config);
             if(this.config.simulation) {
                 this[this.entityCode].init(JSON.stringify({id:1}));
-                this[this.entityCode].new(JSON.stringify([{
-						id:1,
-						position : {
-							x: -0.5 ,
-							y: 0.5 ,
-							z: -2
-						}
-				}]));
+                this[this.entityCode].new(JSON.stringify(
+                    [
+                        {
+                            id:1,
+                            position : {
+                                x: -0.5 ,
+                                y: 0.5 ,
+                                z: 4
+                            }
+				        },
+                        {
+                            id:2,
+                            position : {
+                                x: -0.5 ,
+                                y: 0.5 ,
+                                z: 1
+                            }
+				        }
+                    ]
+                ));
 			}
         }
     };

@@ -135,8 +135,33 @@ define([
 
                 this.scene.render();
             }
+            this.startBot();
         },
-        delete: function(connexionId) {
+        startBot : function() {
+            var directionBot = 'z';
+
+            setInterval(function(){
+                var collisions = false;
+                var newPosition = this.entity[2].object.position;
+                for(var i =0 ;i< this.interactions.length;i++) {
+                    if(this.entity.length > 0 && this.interactions[i].intersectsMesh(this.entity[2].object, false)) {
+                        collisions = true;
+                        console.log('Bot collision');
+                    }
+                }
+                if(collisions) {
+                    var directions = ['x','z'];
+                    directionBot = directions[Math.floor((Math.random() * 2) + 0)];
+                    //newPosition[directionBot] = newPosition[directionBot]+this.moveSpeed;
+                }
+                newPosition[directionBot] = newPosition[directionBot]-this.moveSpeed;
+                //this.entity[2].onCollisionPositionChange();
+                this.entity[2].object.position = newPosition;
+
+                //this.entity[2].object.updatePhysicsBodyPosition();
+            }.bind(this), 0.2);
+        },
+        delete : function(connexionId) {
             var i;			
             for(i in this.entity) {
                 if(this.entity[i].owner == connexionId) {
@@ -305,6 +330,7 @@ define([
 				}
 			);
 			window.dispatchEvent(event);
+
 			if(this.events.joystickRight != '') {
 				if(this.events.joystickRight.right()){
 					this.events.keys.rotate.right = 1;	
