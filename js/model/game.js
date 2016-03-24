@@ -47,7 +47,7 @@ define(function () {
                             position : {
                                 x: -0.5 ,
                                 y: 0.5 ,
-                                z: 4
+                                z: 2
                             }
 				        },
                         {
@@ -55,7 +55,7 @@ define(function () {
                             position : {
                                 x: -0.5 ,
                                 y: 0.5 ,
-                                z: 1
+                                z: -3
                             }
 				        }
                     ]

@@ -101,7 +101,8 @@ define([
                 ent.material = entityMaterial;
                 ent.showBoundingBox = true;
                 ent.checkCollisions = true;
-
+				ent.ellipsoid = new BABYLON.Vector3(0.3, 0.3, 0.3);
+				
                 this.entity[data[i].id] = {
                     owner: data[i].id,
                     entityId: data[i].id,
@@ -132,6 +133,7 @@ define([
 					}
 				);
 				window.dispatchEvent(event);
+				
 
                 this.scene.render();
             }
@@ -139,31 +141,40 @@ define([
         },
         startBot : function() {
             var directionBot = 'z';
-
+            var directions = ['x','z'];
+			var collisions = 0;
+			var botSpeed = -this.moveSpeed;
+				
             setInterval(function(){
-                var collisions = false;
-                var newPosition = this.entity[2].object.position;
+                
+                //var newPosition = this.entity[2].object.position;
+                var newPosition = new BABYLON.Vector3(0, this.entity[2].object.position.y, 0);
                 for(var i =0 ;i< this.interactions.length;i++) {
                     if(this.entity.length > 0 && this.interactions[i].intersectsMesh(this.entity[2].object, false)) {
                         collisions = true;
-                        console.log('Bot collision');
-                    }
+                        console.log('Bot collision:' + collisions);
+                        break;
+                    } else {
+						collisions = true;
+					}
                 }
-                if(collisions) {
-                    var directions = ['x','z'];
+                
+				if(collisions) {
                     directionBot = directions[Math.floor((Math.random() * 2) + 0)];
-                    //newPosition[directionBot] = newPosition[directionBot]+this.moveSpeed;
+                    botSpeed = -(botSpeed)
                 }
-                newPosition[directionBot] = newPosition[directionBot]-this.moveSpeed;
-                //this.entity[2].onCollisionPositionChange();
-                this.entity[2].object.position = newPosition;
-
-                //this.entity[2].object.updatePhysicsBodyPosition();
-            }.bind(this), 0.2);
+                
+                newPosition[directionBot] = newPosition[directionBot]-(botSpeed);
+                newPosition.y = 0.5;
+                this.entity[2].object.moveWithCollisions(newPosition);
+                 
+				jQuery('#directionBot').html(directionBot);
+				jQuery('#speedBot').html(botSpeed);
+            }.bind(this), 500);
         },
         delete : function(connexionId) {
             var i;			
-            for(i in this.entity) {
+            for(i in this.entitsszy) {
                 if(this.entity[i].owner == connexionId) {
 					/** Dispatch delete entity Custom Event **/
 					var	event = new CustomEvent(

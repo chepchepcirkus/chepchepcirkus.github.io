@@ -27,66 +27,8 @@ define(['lib/jquery','lib/virtualjoystick'], function() {
         launchEvent : function () {
 			switch(this.controller) {
 				case 'keyboard' :
-					window.addEventListener('keydown',function(event){
-						if (event.keyCode == 90){
-							this.keys.up = 1;
-							this.dataChanged = true;
-						}
-						if (event.keyCode == 83){
-							this.keys.down = 1;
-							this.dataChanged = true;
-						}
-						if (event.keyCode == 81){
-							this.keys.left = 1;
-							this.dataChanged = true;
-						}
-						if (event.keyCode == 68){
-							this.keys.right = 1;
-							this.dataChanged = true;
-						}
-						if (event.keyCode == 39){
-							this.keys.rotate.right = 1;
-							this.dataChanged = true;
-						}
-						if (event.keyCode == 37){
-							this.keys.rotate.left = 1;
-							this.dataChanged = true;
-						}
-						if (event.keyCode === 32) {
-							CHEPK.game.loonyball.switchView();
-						}
-					}.bind(this));
-					
-					window.addEventListener('keyup',function(event) {
-						if (event.keyCode == 90) {
-							this.keys.up = 0;
-						}
-						if (event.keyCode == 83){
-							this.keys.down = 0;
-						}
-						if (event.keyCode == 81){
-							this.keys.left = 0;
-						}
-						if (event.keyCode == 68){
-							this.keys.right = 0;
-						}
-						if (event.keyCode == 37){
-							this.keys.rotate.left = 0;
-						}
-						if (event.keyCode == 39){
-							this.keys.rotate.right = 0;
-						}
-						if(
-							!this.keys.up
-							&& !this.keys.down
-							&& !this.keys.right
-							&& !this.keys.left
-							&& !this.keys.rotate.left
-							&& !this.keys.rotate.right
-						) {
-							this.dataChanged = false;
-						}
-					}.bind(this));
+					window.addEventListener('keydown', this.keydown.bind(this));
+					window.addEventListener('keyup', this.keyup.bind(this));
 				break;
 				
 				case 'joystick' :
@@ -119,6 +61,65 @@ define(['lib/jquery','lib/virtualjoystick'], function() {
 				default :
 					throw 'CHEPK.game.controller is not defined';
 				break;
+			}
+		},
+		keyup : function(event) {
+			if (event.keyCode == 90) {
+				this.keys.up = 0;
+			}
+			if (event.keyCode == 83){
+				this.keys.down = 0;
+			}
+			if (event.keyCode == 81){
+				this.keys.left = 0;
+			}
+			if (event.keyCode == 68){
+				this.keys.right = 0;
+			}
+			if (event.keyCode == 37){
+				this.keys.rotate.left = 0;
+			}
+			if (event.keyCode == 39){
+				this.keys.rotate.right = 0;
+			}
+			if(
+				!this.keys.up
+				&& !this.keys.down
+				&& !this.keys.right
+				&& !this.keys.left
+				&& !this.keys.rotate.left
+				&& !this.keys.rotate.right
+			) {
+				this.dataChanged = false;
+			}
+		},
+		keydown : function (event) {
+			if (event.keyCode == 90){
+				this.keys.up = 1;
+				this.dataChanged = true;
+			}
+			if (event.keyCode == 83){
+				this.keys.down = 1;
+				this.dataChanged = true;
+			}
+			if (event.keyCode == 81){
+				this.keys.left = 1;
+				this.dataChanged = true;
+			}
+			if (event.keyCode == 68){
+				this.keys.right = 1;
+				this.dataChanged = true;
+			}
+			if (event.keyCode == 39){
+				this.keys.rotate.right = 1;
+				this.dataChanged = true;
+			}
+			if (event.keyCode == 37){
+				this.keys.rotate.left = 1;
+				this.dataChanged = true;
+			}
+			if (event.keyCode === 32) {
+				CHEPK.game.loonyball.switchView();
 			}
 		}
     };
