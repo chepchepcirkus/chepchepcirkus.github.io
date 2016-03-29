@@ -29,7 +29,7 @@ require(
 			CHEPK.layout.init(events);
 			CHEPK.game.init(entity).start();
 		} catch(exception) {
-			if(CHEPK.config.debug == true) {
+			if(CHEPK.config.debug.message == true) {
 				document.getElementById('messages').innerHTML = '<div class="error">' + exception + '</div>';
 			} else {
 				document.getElementById('messages').innerHTML = '<div class="error">Oups ... An error occured!</div>';

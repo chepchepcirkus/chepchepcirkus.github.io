@@ -11,7 +11,7 @@
  * 
  */ 
 define([
-		 'lib/babylon.2.2',
+		 'lib/babylon.2.3.babylon.max',
 		 'lib/hand-1.1.3'
 	], function (babylon) {
     function loonyball() {
@@ -120,7 +120,12 @@ define([
                 /** Camera target **/
                 if(this.entityId == data[i].id) {
                     this.scene.camera.target = this.entity[data[i].id].object;
-                }
+					if(this.config.debug.layer == true) {
+						this.scene.debugLayer.shouldDisplayAxis = function () {
+							return this.entity[data[i].id].object.name === "sphere1";
+						}.bind(this);
+					}
+				}
 
                 /** Dispatch after new Custom Event **/
 				event = new CustomEvent(
@@ -272,8 +277,9 @@ define([
             this.scene.actionManager = new BABYLON.ActionManager(this.scene);
 
             this.scene.registerBeforeRender(this.beforeRender.bind(this));
-
-            /** Dispatch before create scene Custom Event **/
+			this.scene.debugLayer.show(this.config.debug.dashboard_layer, this.scene.camera);
+			this.scene.debugLayer.axisRatio = 0.1;
+			/** Dispatch before create scene Custom Event **/
 			event = new CustomEvent(
 				this.entity_code + '_before_create_scene', 
 				{
