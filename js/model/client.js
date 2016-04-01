@@ -1,22 +1,20 @@
 define(function () {
     function client(user) {
-        this.config = {};
         this.socket = {};
         this.scope = [];
         this.user = user;
     }
 
     client.prototype = {
-        init : function (config) {
-            this.config = config;
-            this.scope = config.scope;
+        init : function () {
+            this.scope = CHEPK.config.scope;
             this.create();
         },
         create : function () {
             //SockJS library is loaded by http in index.html
 
-            if(!this.config.simulation) {
-				this.socket = new SockJS(this.config.socket_url);
+            if(!CHEPK.config.simulation) {
+				this.socket = new SockJS(CHEPK.config.socket_url);
 			} else {
 				this.socket = {};
 			}

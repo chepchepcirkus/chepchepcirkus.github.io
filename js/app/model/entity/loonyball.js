@@ -40,7 +40,6 @@ define(['babylon.2.2'], function () {
         new: function(data) {
             var data = JSON.parse(data);
             for(var i in data) {
-
                 var entityMaterial = new BABYLON.StandardMaterial("eMaterial_" + this.entityId, this.scene);
                 entityMaterial.diffuseColor = new BABYLON.Color3(0.1,0,0);
 

@@ -6,12 +6,13 @@ require(
 		'./config',
 		'./model/game',
 		'./model/user',
+		'./model/client',
 		'./model/layout',
 		'./model/entity/loonyball',
 		'./model/events',
 		'./plugins',
 	],
-	function (config, game, user, layout, entity, events, plugins) {
+	function (config, game, user, client, layout, entity, events, plugins) {
 		try{
 			window.CHEPK = {};
 			CHEPK.config = config;
@@ -27,7 +28,10 @@ require(
 				}
 			}
 			CHEPK.layout.init(events);
-			CHEPK.game.init(entity).start();
+			CHEPK.game.init(entity);
+			CHEPK.clientSocket = new client(CHEPK.user);
+            CHEPK.clientSocket.init(CHEPK.config);
+            CHEPK.game.start();
 		} catch(exception) {
 			if(CHEPK.config.debug.message == true) {
 				document.getElementById('messages').innerHTML = '<div class="error">' + exception + '</div>';
