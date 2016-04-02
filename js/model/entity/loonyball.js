@@ -53,7 +53,6 @@ define([
     }
     loonyball.prototype = {
         init: function(data) {
-            var data = JSON.parse(data);
             this.entityId = data.id;
             /** Dispatch Init Custom Event **/
             var event = new CustomEvent(
@@ -75,7 +74,6 @@ define([
          * @params data {id, position}
          */
         new: function(data) {
-            var data = JSON.parse(data);
             for(var i in data) {
 
 				/** Dispatch before new Custom Event **/
@@ -142,7 +140,7 @@ define([
 
                 this.scene.render();
             }
-            this.startBot();
+            //this.startBot();
         },
         startBot : function() {
             var directionBot = 'z';
@@ -179,7 +177,7 @@ define([
         },
         delete : function(connexionId) {
             var i;			
-            for(i in this.entitsszy) {
+            for(i in this.entity) {
                 if(this.entity[i].owner == connexionId) {
 					/** Dispatch delete entity Custom Event **/
 					var	event = new CustomEvent(
@@ -521,12 +519,13 @@ define([
         },
 
         update:function (data) {
-            var data = JSON.parse(data);
             for(var i in data) {
-                this.entity[data[i].id].object.position = new BABYLON.Vector3(data[i].position.x, data[i].position.y, data[i].position.z);
-                this.entity[data[i].id].remoteOpts.position = this.entity[data[i].id].object.position;
-                this.scene.render();
+				if(i != this.entityId) {
+					this.entity[data[i].id].object.position = new BABYLON.Vector3(data[i].position.x, data[i].position.y, data[i].position.z);
+					this.entity[data[i].id].remoteOpts.position = this.entity[data[i].id].object.position;
+				}
             }
+            this.scene.render();
         },
 		moveCamera : function (freeCamera, fromPosition, toPosition, fromRotation, toRotation) {
 
