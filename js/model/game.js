@@ -37,7 +37,7 @@ define(function () {
         start : function () {
             this[this.entityCode].start(CHEPK.config);
             if(CHEPK.config.simulation) {
-                this[this.entityCode].init(JSON.stringify({id:1}));
+                this[this.entityCode].init({id:1});
                 this[this.entityCode].new(
                     [
                         {
