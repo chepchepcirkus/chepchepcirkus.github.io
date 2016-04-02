@@ -6,7 +6,6 @@ define(function () {
 			throw 'CHEPK.user is not loaded';
 		}
         this.entityCode = '';
-        this.config = '';
         this.controller = '';
     }
 
@@ -19,16 +18,15 @@ define(function () {
             var entity = new entity();
             this.entityCode = entity.entity_code;
             this[this.entityCode] = entity;
-            this.config = CHEPK.config;
             var data = [
                 {'user': CHEPK.user},
-                {'entity' : this[this.entityCode]}
+                {'loonyball': this[this.entityCode]}
             ];
 
-            this.config.scope = [];
+            CHEPK.config.scope = [];
             for (var i in data) {
                 if (typeof data[i] != "undefined") {
-                    this.config.scope.push(data[i]);
+                    CHEPK.config.scope.push(data[i]);
                 }
                 else {
                     console.log('Initialized state : ' + data[i] + ' custom scope is undefined..');
@@ -37,8 +35,8 @@ define(function () {
             return this;
         },
         start : function () {
-            this[this.entityCode].start(this.config);
-            if(this.config.simulation) {
+            this[this.entityCode].start(CHEPK.config);
+            if(CHEPK.config.simulation) {
                 this[this.entityCode].init(JSON.stringify({id:1}));
                 this[this.entityCode].new(
                     [
