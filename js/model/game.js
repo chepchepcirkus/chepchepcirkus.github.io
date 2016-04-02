@@ -40,7 +40,7 @@ define(function () {
             this[this.entityCode].start(this.config);
             if(this.config.simulation) {
                 this[this.entityCode].init(JSON.stringify({id:1}));
-                this[this.entityCode].new(JSON.stringify(
+                this[this.entityCode].new(
                     [
                         {
                             id:1,
@@ -59,7 +59,7 @@ define(function () {
                             }
 				        }
                     ]
-                ));
+                );
 			}
         }
     };

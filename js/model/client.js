@@ -39,7 +39,7 @@ define(function () {
                     fn = this.getFunction(jsonData.f)
                 }
                 if (fn) {
-                    fn[0].apply(fn[1], [JSON.stringify(jsonData.d)]);
+                    fn[0].apply(fn[1], [jsonData.d]);
                 }
                 else {
                     console.log('function : "' + jsonData.f + '" doesn\'t exists...');
