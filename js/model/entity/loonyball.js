@@ -123,6 +123,18 @@ define([
 							return this.entity[data[i].id].object.name === "sphere1";
 						}.bind(this);
 					}
+					var path = [];
+					var temp = this.entity[data[i].id].object.position
+					path.push(temp);
+					temp.z+10;
+					path.push(temp);
+					temp.z+15;
+					path.push(temp);
+					temp.z+20;
+					path.push(temp);
+					var ellispoidCustom = new BABYLON.Mesh.CreateLines('customLine', path, this.scene);
+					ellispoidCustom.color = new BABYLON.Color3(0.1,0,0);
+					
 				}
 
                 /** Dispatch after new Custom Event **/
@@ -142,6 +154,14 @@ define([
             }
             //this.startBot();
         },
+        updatePath : function () {
+			/*var path = [];
+			path.push(redSphere.position);
+			path.push(greenBox.position);
+			path.push(blueBox.position);
+			path.push(purpleDonut.position);
+			path.push(redSphere.position);*/
+		},
         startBot : function() {
             var directionBot = 'z';
             var directions = ['x','z'];
@@ -176,8 +196,8 @@ define([
             }.bind(this), 500);
         },
         delete : function(connexionId) {
-            var i;			
-            for(i in this.entity) {
+            var i;		
+            for(i in this.entity) {	
                 if(this.entity[i].owner == connexionId) {
 					/** Dispatch delete entity Custom Event **/
 					var	event = new CustomEvent(
@@ -192,7 +212,6 @@ define([
 						}
 					);
 					window.dispatchEvent(event);
-					
 					this.entity[i].object.dispose();
                     this.scene.render();
                     this.entity.splice(i);
