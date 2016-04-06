@@ -123,17 +123,17 @@ define([
 							return this.entity[data[i].id].object.name === "sphere1";
 						}.bind(this);
 					}
-					var path = [];
+					/*var path = [];
 					var temp = this.entity[data[i].id].object.position
 					path.push(temp);
-					temp.z+10;
+					temp.z-10;
 					path.push(temp);
-					temp.z+15;
+					temp.z-15;
 					path.push(temp);
-					temp.z+20;
+					temp.z-20;
 					path.push(temp);
 					var ellispoidCustom = new BABYLON.Mesh.CreateLines('customLine', path, this.scene);
-					ellispoidCustom.color = new BABYLON.Color3(0.1,0,0);
+					ellispoidCustom.color = new BABYLON.Color3(0.1,0,0);*/
 					
 				}
 
@@ -461,12 +461,12 @@ define([
 				}
 
 				var collisions = false;
-				for(var i =0 ;i< this.interactions.length;i++) {
+				/*for(var i =0 ;i< this.interactions.length;i++) {
 					if(this.entity.length > 0 && this.interactions[i].intersectsMesh(this.entity[this.entityId].object, true)) {
 						collisions = true;
 						console.log('collision');
 					}
-				}
+				}*/
 				
 				this.entity[this.entityId].object.rotation = newRotation;
 				newPosition.y = 0;
@@ -502,7 +502,7 @@ define([
 			dummy.applyGravity = true;
             dummy.showBoundingBox = true;
             dummy.active = false;
-
+			var meshesToMerge = [];
             for (var y = 0; y < groundSize; y++) {
                 if(this.map[y].length > 0) {
                     for (var x = 1; x <= groundSize; x++) {
@@ -520,7 +520,8 @@ define([
 								var box = dummy.clone('box-' + x + '_' + y);
 							}
                             box.position = new BABYLON.Vector3(y-(groundSize/2-0.5), cubeSize / 2, (x-groundSize/2-0.5));
-                            this.interactions.push(box);
+                            meshesToMerge.push(box);
+                            //this.interactions.push(box);
 						}
                     }
                 } else {
@@ -530,11 +531,14 @@ define([
 						} else {
 							var box = dummy.clone('box-' + x + '_' + y);
 						}
+						meshesToMerge.push(box);
                         box.position = new BABYLON.Vector3(y-(groundSize/2-0.5), cubeSize / 2, (x-groundSize/2-0.5));
-                        this.interactions.push(box);
+                        //this.interactions.push(box);
 					}
                 }
             }
+            
+            var newMesh = BABYLON.Mesh.MergeMeshes(meshesToMerge);
         },
 
         update:function (data) {
