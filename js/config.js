@@ -1,8 +1,8 @@
 define(function () {
     return {
         debug:{
-            layer : true,
-            dashboard_layer : true,
+            layer : false,
+            dashboard_layer : false,
             message : true
         },
         simulation:true,
