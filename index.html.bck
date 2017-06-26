@@ -1,0 +1,43 @@
+
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="HandheldFriendly" content="true">
+    <title>LoOnYbAlL</title>
+    <link href="style.css" rel="stylesheet" />
+    <script src="//cdn.jsdelivr.net/sockjs/1.0.0/sockjs.min.js"></script>
+</head>
+<body>
+<div id="top">
+	<div id="messages">
+	</div>
+	<!--<div class="debug">
+		<ul>
+			<li>Gamma <span id="info_gamma"></span></li>
+			<li>Beta <span id="info_beta"></span></li>
+			<li>Alpha <span id="info_alpha"></span></li>
+		</ul>
+	</div>-->
+</div>
+<div id="left"></div>
+<div id="center">
+	<div class="controller-type" id="joystick" style="display:none;"></div>
+	<div class="controller-type" id="keyboard" style="display:none;"></div>
+</div>
+<div id="right"></div>
+<div id="bottom">
+	<div class="debug">
+		<ul>
+			<li>Direction Bot <span id="directionBot"></span></li>
+			<li>speedBot <span id="speedBot"></span></li>
+		</ul>
+	</div>
+</div>
+<div id="shadow"></div>
+<div id="loader"></div>
+<canvas id="renderCanvas"></canvas>
+<script data-main="js/app.js" src="js/lib/require.js"></script>
+</body>
+</html>
