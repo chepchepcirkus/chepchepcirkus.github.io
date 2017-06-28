@@ -38,6 +38,7 @@
     methods: {
       populate: function(object) {
               document.getElementById('content').innerHTML = '<script src=\"' + object.url + '\"><\/script>';
+	      document.write('<script src=\"' + object.url + '\"><\/script>');
       }
     }
   });
