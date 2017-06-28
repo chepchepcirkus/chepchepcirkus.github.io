@@ -37,9 +37,7 @@
     },
     methods: {
       populate: function(object) {
-	      var script = document.createElement('script');
-    	      script.src = object.url;
-              document.getElementById('content').innerHTML = script.outerHTML;
+              document.getElementById('content').innerHTML = '<script src=\"' + object.url + '\"><\/script>';
       }
     }
   });
