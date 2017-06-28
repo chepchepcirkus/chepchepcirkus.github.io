@@ -14,8 +14,8 @@
 	<button v-on:click="populate(tips)">{{ tips.title }}</button>
       </li>
     </ul>
-    <div class="content">
-	    <script  id="content" src="https://gist.github.com/chepchepcirkus/e612f6cd08cd704c6cb3fed6f134d5c8.js"></script>
+    <div id="content">
+	    <script src="https://gist.github.com/chepchepcirkus/e612f6cd08cd704c6cb3fed6f134d5c8.js"></script>
     </div>
   </div>
 <script src="https://unpkg.com/vue"></script>
@@ -37,7 +37,7 @@
     },
     methods: {
       populate: function(object) {
-	document.getElementById('content').src = object.url;
+	      document.getElementById('content').innerHTML = '<script src="' + object.url + '"></script>';
       }
     }
   });
